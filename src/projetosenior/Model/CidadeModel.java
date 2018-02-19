@@ -13,7 +13,7 @@ package projetosenior.Model;
 
     
 public class CidadeModel {
-     private int ibgeId;
+    private int ibgeId;
     private String capital;
     private int lat;
     private int lon;

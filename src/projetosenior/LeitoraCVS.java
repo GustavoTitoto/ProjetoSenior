@@ -39,7 +39,7 @@ public class LeitoraCVS {
             
             
             
-            System.out.println("País [code= " + cidade[cidade.length-2] 
+            System.out.println("Cidade [code= " + cidade[cidade.length-2] 
                                  + " , name=" + cidade[cidade.length-1] + "]");
 
         }

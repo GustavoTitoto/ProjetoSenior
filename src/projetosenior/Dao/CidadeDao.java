@@ -157,10 +157,23 @@ public class CidadeDao {
         PreparedStatement ps = null;
         try {
 
+           /* private int ibgeId;
+    private String capital;
+    private int lat;
+    private int lon;
+    private String uf;
+    private int noAccents;
+    private String nomeAlternativo;
+    private String microRegiao;
+    private String macroRegiao;*/
             ps = connection.prepareStatement(sql);
-            ps.setString(1, cidade.getCidDescricao());
-            ps.setString(2, cidade.getCidUf());
-            ps.setInt(3, cidade.getCidCodigo());
+            ps.setInt(1, cidade.getIbgeId());
+            ps.setString(2, cidade.getCapital());
+            ps.setInt(3, cidade.getLat());
+            ps.setInt(4, cidade.getLon());
+            ps.setString(5, cidade.getUf());
+            
+            
             ps.execute();
         } catch (SQLException ex) {
             Logger.getLogger(CidadeDao.class.getName()).log(Level.SEVERE, null, ex);
