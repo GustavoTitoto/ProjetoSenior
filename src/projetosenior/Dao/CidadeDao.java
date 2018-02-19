@@ -29,78 +29,6 @@ public class CidadeDao {
         this.connection = new ConnectionFactory().getConnection();
 
     }
-
-    public List getListaCidadePaginada(int pagina, String ordenacao, String pesquisa, String campopesquisa) throws SQLException {
-
-        int limite = 10;
-        int offset = (pagina * limite) - limite;
-        String sql = "";
-
-        if (campopesquisa.equals("cidCodigo")) {
-            if (pesquisa.equals("")) {
-                sql = "select * from cidade where cidCodigo > 0 order by " + ordenacao + " LIMIT 10 OFFSET " + offset;
-            } else {
-                sql = "select * from cidade where cidCodigo = " + pesquisa + " order by " + ordenacao + " LIMIT 10 OFFSET " + offset;
-            }
-        } else {
-            sql = "select * from cidade where " + campopesquisa + " like '%" + pesquisa + "%' order by " + ordenacao + " LIMIT 10 OFFSET " + offset;
-        }
-
-        PreparedStatement ps = null;
-        ResultSet resultSet = null;
-
-        List<CidadeModel> listaCidade = new ArrayList<CidadeModel>();
-        try {
-            ps = connection.prepareStatement(sql);
-            resultSet = ps.executeQuery();
-
-            while (resultSet.next()) {
-                CidadeModel cidade = new CidadeModel();
-                cidade.setCidDescricao(resultSet.getString("cidDescricao"));
-                cidade.setCidCodigo(resultSet.getInt("cidCodigo"));
-                cidade.setCidUf(resultSet.getString("cidUf"));    
-                listaCidade.add(cidade);
-            }
-            return listaCidade;
-
-        } catch (SQLException ex) {
-
-            Logger.getLogger(CidadeDao.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
-    }
-     public List getListaCidadeCombo() throws SQLException {
-
-        String sql = "";
-
-        sql = "select * from cidade order by cidDescricao";
-
-        PreparedStatement ps = null;
-        ResultSet resultSet = null;
-
-        List<CidadeModel> listaCidade = new ArrayList<CidadeModel>();
-        try {
-            ps = connection.prepareStatement(sql);
-            resultSet = ps.executeQuery();
-
-            while (resultSet.next()) {
-                CidadeModel cidade = new CidadeModel();
-                cidade.setCidDescricao(resultSet.getString("cidDescricao"));
-                cidade.setCidCodigo(resultSet.getInt("cidCodigo"));
-
-                listaCidade.add(cidade);
-                
-            }
-            System.out.println(listaCidade);
-            return listaCidade;
-
-        } catch (SQLException ex) {
-
-            Logger.getLogger(CidadeDao.class.getName()).log(Level.SEVERE, null, ex);
-        } 
-        return null;
-    }
-
     //Metodo para retornar numeor total de registros para paginar
     public String totalRegistros(String pesquisa, String campopesquisa) throws SQLException {
         PreparedStatement psConta = null;
@@ -108,11 +36,11 @@ public class CidadeDao {
         String sqlConta = "";
         try {
 
-            if (campopesquisa.equals("cidCodigo")) {
+            if (campopesquisa.equals("ibgeId")) {
                 if (pesquisa.equals("")) {
-                    sqlConta = "select count(*) AS contaRegistros from cidade where cidCodigo > 0";
+                    sqlConta = "select count(*) AS contaRegistros from cidade where ibgeId > 0";
                 } else {
-                    sqlConta = "select count(*) AS contaRegistros from cidade where cidCodigo = " + pesquisa;
+                    sqlConta = "select count(*) AS contaRegistros from cidade where ibgeId = " + pesquisa;
                 }
 
             } else {
@@ -153,25 +81,21 @@ public class CidadeDao {
     }
 
     public void alteraCidade(CidadeModel cidade) throws SQLException {
-        String sql = "update cidade SET cidDescricao=?,cidUf=? where cidCodigo=?";
+        String sql = "update cidade SET capital=?,lat=?,lon=?,uf=?,noAccents=?,nomeAlternativo=?,microRegiao=?"
+                + ",macroRegiao where ibgeId=?";
         PreparedStatement ps = null;
         try {
 
-           /* private int ibgeId;
-    private String capital;
-    private int lat;
-    private int lon;
-    private String uf;
-    private int noAccents;
-    private String nomeAlternativo;
-    private String microRegiao;
-    private String macroRegiao;*/
             ps = connection.prepareStatement(sql);
             ps.setInt(1, cidade.getIbgeId());
             ps.setString(2, cidade.getCapital());
             ps.setInt(3, cidade.getLat());
             ps.setInt(4, cidade.getLon());
             ps.setString(5, cidade.getUf());
+            ps.setInt(6, cidade.getNoAccents());
+            ps.setString(7, cidade.getNomeAlternativo());
+            ps.setString(8, cidade.getMicroRegiao());
+            ps.setString(9, cidade.getMacroRegiao());
             
             
             ps.execute();
@@ -183,14 +107,22 @@ public class CidadeDao {
         }
     }
 
-    public void novoCidade(CidadeModel cidade) throws SQLException {
-        String sql = "INSERT INTO public.cidade (cidDescricao,cidUf) VALUES (?,?)";
+    public void novaCidade(CidadeModel cidade) throws SQLException {
+        String sql = "INSERT INTO public.cidade (ibgeId,capital,lat,lon,uf,noAccents,nomeAlternativo,microRegiao,macroRegiao)"
+                + " VALUES (?,?,?,?,?,?,?,?,?)";
 
         PreparedStatement ps = null;
         try {
-            ps = connection.prepareStatement(sql);
-            ps.setString(1, cidade.getCidDescricao());
-            ps.setString(2, cidade.getCidUf());
+            ps = connection.prepareStatement(sql);           
+            ps.setInt(1, cidade.getIbgeId());
+            ps.setString(2, cidade.getCapital());
+            ps.setInt(3, cidade.getLat());
+            ps.setInt(4, cidade.getLon());
+            ps.setString(5, cidade.getUf());
+            ps.setInt(6, cidade.getNoAccents());
+            ps.setString(7, cidade.getNomeAlternativo());
+            ps.setString(8, cidade.getMicroRegiao());
+            ps.setString(9, cidade.getMacroRegiao());
             ps.execute();
         } catch (SQLException ex) {
             Logger.getLogger(CidadeDao.class.getName()).log(Level.SEVERE, null, ex);

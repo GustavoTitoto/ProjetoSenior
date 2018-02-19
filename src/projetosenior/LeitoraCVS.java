@@ -13,6 +13,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import projetosenior.Dao.CidadeDao;
 
 public class LeitoraCVS {
 
@@ -29,6 +30,7 @@ public class LeitoraCVS {
     BufferedReader br = null;
     String linha = "";
     String csvDivisor = ",";
+    
     try {
 
         br = new BufferedReader(new FileReader(arquivoCSV));
@@ -36,11 +38,21 @@ public class LeitoraCVS {
 
             String[] cidade = linha.split(csvDivisor);
             
+           
+            System.out.println("Cidade [ibgeId= " + cidade[0] 
+                                 + " , uf=" + cidade[1] +  "name= " + cidade[2] 
+                                 + " , capital= " + cidade[3] 
+                                 + " , lon= " + cidade[4] 
+                                 + " , lat= " + cidade[5] 
+                                 + " , noAccents= " + cidade[6] 
+                                 + " , nomeAlternativo= " + cidade[7] 
+                                 + " , microRegiao= " + cidade[8] 
+                                 + " , macroRegiao= " + cidade[9] +"]");
             
             
             
-            System.out.println("Cidade [code= " + cidade[cidade.length-2] 
-                                 + " , name=" + cidade[cidade.length-1] + "]");
+            
+            
 
         }
 
